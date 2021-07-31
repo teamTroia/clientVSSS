@@ -33,8 +33,10 @@ class Menu:
         entry.config(
             bg=BAKCGROUND_COLOR, 
             fg=FOREGROUND_COLOR, 
-            relief=tk.FLAT, 
+            highlightthickness=1,
+            relief=tk.SOLID, 
             highlightcolor=FOREGROUND_COLOR,
+            highlightbackground=FOREGROUND_COLOR,
             textvariable = text
         )
         entry.pack(padx=25, pady=5, fill=tk.X, expand=1)
@@ -60,13 +62,13 @@ class Menu:
             fg=FOREGROUND_COLOR,
             bg=BAKCGROUND_COLOR,
             selectcolor=BLUE,
-            cursor="hand1"
+            cursor="hand2"
         )
         
         button_yellow = tk.Radiobutton(frame)
         button_yellow.config(
             highlightbackground = YELLOW,
-            relief=tk.FLAT,
+            relief=tk.SOLID,
             indicator=0,
             variable=color,
             value="AMARELO",
@@ -74,7 +76,7 @@ class Menu:
             fg=FOREGROUND_COLOR,
             bg=BAKCGROUND_COLOR,
             selectcolor=YELLOW,
-            cursor="hand1"
+            cursor="hand2"
         )
 
         frame.pack(side=tk.TOP, padx=25, fill=tk.X)
@@ -109,7 +111,7 @@ class Menu:
             variable=index,
             selectcolor="red",
             value=0,
-            cursor="hand1"
+            cursor="hand2"
         )
 
         robot_1 = tk.Radiobutton(frame)
@@ -122,7 +124,7 @@ class Menu:
             variable=index,
             selectcolor="red",
             value=1,
-            cursor="hand1"
+            cursor="hand2"
         )
         robot_2 = tk.Radiobutton(frame)
         robot_2.config(
@@ -134,7 +136,7 @@ class Menu:
             indicator=0,
             value=2,
             selectcolor="red",
-            cursor="hand1"
+            cursor="hand2"
         )
 
         frame.pack(side=tk.TOP, padx=25,  fill=tk.X)
@@ -156,7 +158,7 @@ class Menu:
             bg=LIGHT_GRAY,
             fg=BAKCGROUND_COLOR,
             highlightthickness = 0,
-            cursor="hand1",
+            cursor="hand2",
             command=self.start
         )
 
