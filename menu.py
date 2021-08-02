@@ -7,7 +7,8 @@ LIGHT_GRAY = "#D3D3D3"
 BLUE = "#0000FF"
 YELLOW = "#FFFF00"
 class Menu:
-    def __init__(self):
+    def __init__(self, onclick):
+        self.onclick = onclick
         self.root = self.__create_root()
         self.addr_entry, self.entry_value = self.__create_entry()
         self.color_buttons, self.team_color = self.__create_rbtn_colors()
@@ -148,6 +149,7 @@ class Menu:
 
     def start(self):
         print(f"IP {self.entry_value.get()}; TIME {self.team_color.get()} ROBO {self.robot_index.get()}")
+        self.onclick(self.entry_value.get(), self.team_color.get(), self.robot_index.get())
 
     def __create_btn_start(self):
         ##create button
@@ -163,8 +165,14 @@ class Menu:
         )
 
         button.pack(side=tk.TOP, fill=tk.X, expand=1, padx=25, pady=25)
+    
+    
+    def show(self):
+        self.root.deiconify()
+    
+    
+    def hide(self):
+        self.root.withdraw()
+
     def run(self):
         self.root.mainloop()
-
-menu = Menu()
-menu.run()
