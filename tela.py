@@ -8,7 +8,7 @@ class Screen():
         self.connection = connection
         self.screen = pygame.display.set_mode((520,680))
         pygame.display.set_caption("VSSS")
-        self.all_sprites = self.create_sprites()
+        self.yellow_sprites, blue_sprites = self.create_sprites()
 
     def run(self):
         while True:
@@ -23,6 +23,15 @@ class Screen():
                         robo.rotate(-90)
 
             frame = self.get_package()
+
+        for robot, index in enumerate(frame.robots_blue):
+            self.blue_sprites[index].locate(robot.x,robot.y,robot.orientation)
+        
+        for robot, index in enumerate(frame.robots_yellow):
+            self.yellow_sprites[index].locate(robot.x,robot.y,robot.orientation)
+        
+        self.yellow_sprites.draw(self.screen)
+        self.blue_sprites.draw(self.screen)
             
     def get_package(self):
         data = self.connection.recv(1024)
@@ -30,20 +39,43 @@ class Screen():
         return frame
 
     def create_sprites(self):
-        group = pygame.sprite.Group()
+        group_yellow = pygame.sprite.Group()
+        group_blue = pygame.sprite.Group()
 
-        return group
+        for i in range(3):
+            group_yellow.add(Robot(1,i))
+            group_blue.add(Robot(0,i))
+
+        return group_yellow, group_blue
 
 class Robot(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, isYellow, id):
+        self.path = "sprites/azul/"
+        self.name = 'azul'+str(id)
+        if(isYellow):
+            self.path = "sprites/amarelo/"
+            self.name = 'amarelo'+str(id)
+
         pygame.sprite.Sprite.__init__(self)
         self.sprites = self.load_sprites()
         self.image = self.sprites[0]
     
     def load_sprites(self):
         sprites = []
-        sprites.append(pygame.image.load("robo.png"))
+        sprites.append(pygame.image.load(f"{self.path}{self.name}+-0.png"))
+        sprites.append(pygame.image.load(f"{self.path}{self.name}+-18.png"))
+        sprites.append(pygame.image.load(f"{self.path}{self.name}+-36.png"))
+        sprites.append(pygame.image.load(f"{self.path}{self.name}+-54.png"))
+        sprites.append(pygame.image.load(f"{self.path}{self.name}+-72.png"))
         return sprites
 
-    def set_position(self):
+    def locate(self,x,y,angle):
+        self.rotate(angle)
+        self.set_position(x, y)
+
+    def set_position(self, x,y):
+        self.rect = self.image.get_rect()
+        self.rect.center = (x,y)
+
+    def rotate(self, angle):
         pass
