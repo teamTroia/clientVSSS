@@ -15,7 +15,7 @@ class CommandSender:
     
     def send_command(self, command):
         cmd = command.encode()
-        self._sock.sendall(cmd)
+        self._sock.send(cmd)
     
     def receive_command(self, buffer_size):
         command = self._sock.recv(buffer_size)

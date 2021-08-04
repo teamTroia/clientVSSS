@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import lib.common_pb2 as comm
+from math import *
 
 class Robot(pygame.sprite.Sprite):
     def __init__(self, isYellow, id):
@@ -26,14 +27,29 @@ class Robot(pygame.sprite.Sprite):
         return sprites
 
     def locate(self,x,y,angle):
-        #self.rotate(angle)
+        self.rotate(angle)
         self.set_position(x, y)
 
     def set_position(self, y,x):
-        x = (x+0.65)*400
-        y = (y+0.85)*400
+        x = x*400
+        y = y*400
         self.rect = self.image.get_rect()
         self.rect.center = (x,y)
 
     def rotate(self, angle):
-        pass
+        angle=degrees(angle)
+
+        if angle%90 > 81 or angle%90 <= 9:
+            self.image=self.sprites[0]
+        elif 9 < angle%90 <= 27:
+            self.image = self.sprites[1]
+        elif 27 < angle%90 <= 45:
+            self.image = self.sprites[2]
+        elif 45 < angle%90 <= 63:
+            self.image = self.sprites[3]
+        elif 63 < angle%90 <= 81:
+            self.image = self.sprites[4]
+
+        rotacoes=angle//90
+
+        self.image=pygame.transform.rotate(self.image, -90*rotacoes)
