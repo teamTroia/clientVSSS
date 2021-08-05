@@ -13,17 +13,27 @@ def run_game():
     pygame.display.set_caption("VSSS")
     yellow_sprites, blue_sprites = create_sprites()
     clock = pygame.time.Clock()
+
+    teclas=[]
     
     funcionando=True
     while funcionando:
-        client.send_command("p")
-
         clock.tick(60)
         screen.fill((0,0,0))
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
                 funcionando=False
                 client.send_command("c")
+            elif event.type == pygame.KEYDOWN:
+                key=check_key(event.key)
+
+                if key not in teclas and key!='p':
+                    teclas.append(key)
+            elif event.type == pygame.KEYUP:
+                key=check_key(event.key)
+
+                if key in teclas:
+                    teclas.remove(key)
 
         try:
             frame = get_package()
@@ -37,6 +47,26 @@ def run_game():
             for robot in yellow_sprites:
                 robot.locate(frame.robots_yellow[index2].x,frame.robots_yellow[index2].y,frame.robots_yellow[index2].orientation)
                 index2 += 1
+
+            if len(teclas) == 1:
+                envio = teclas[0]
+            elif len(teclas) == 2 :
+                teclas.sort()
+
+                if teclas[0] == 'a' and teclas[1] == 'w':
+                    envio = 'q'
+                elif teclas[0] == 'd' and teclas[1] == 'w':
+                    envio = 'e'
+                elif teclas[0] == 'a' and teclas[1] == 's':
+                    envio = 'z'
+                elif teclas[0] == 'd' and teclas[1] == 's':
+                    envio = 'x'
+                else:
+                    envio = 'p'
+            else:
+                envio = 'p'
+
+            client.send_command(envio)
         except:
             funcionando=False
             messagebox.showerror(title="Error", message="Conexão encerrada!")
@@ -46,6 +76,19 @@ def run_game():
         pygame.display.flip()
 
     pygame.quit()
+
+def check_key(key):
+    if key == pygame.K_a or key == pygame.K_LEFT:
+        return 'a'
+    elif key == pygame.K_w or key == pygame.K_UP:
+        return 'w'
+    elif key == pygame.K_d or key == pygame.K_RIGHT:
+        return 'd'
+    elif key == pygame.K_s or key == pygame.K_DOWN:
+        return 's'
+    else:
+        return 'p'
+
 
 def create_sprites():
         group_yellow = pygame.sprite.Group()
