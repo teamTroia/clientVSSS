@@ -6,6 +6,7 @@ from tkinter import messagebox
 from frame import *
 from pygame.locals import *
 import lib.common_pb2 as comm
+import time
   
 def run_game():
     pygame.init()
@@ -15,15 +16,23 @@ def run_game():
     clock = pygame.time.Clock()
 
     teclas=[]
-    
+
+    t_ini=time.time()
+
     funcionando=True
     while funcionando:
         clock.tick(60)
         screen.fill((0,0,0))
+
+        t_ciclo=time.time()-t_ini
+        t_ini=time.time()
+
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
                 funcionando=False
                 client.send_command("c")
+
+
             elif event.type == pygame.KEYDOWN:
                 key=check_key(event.key)
 
@@ -36,7 +45,9 @@ def run_game():
                     teclas.remove(key)
 
         try:
+            t1 = time.time()
             frame = get_package()
+            t_parte = time.time() - t1
 
             index = 0
             for robot in blue_sprites:
@@ -50,7 +61,7 @@ def run_game():
 
             if len(teclas) == 1:
                 envio = teclas[0]
-            elif len(teclas) == 2 :
+            elif len(teclas) == 2:
                 teclas.sort()
 
                 if teclas[0] == 'a' and teclas[1] == 'w':
@@ -67,6 +78,7 @@ def run_game():
                 envio = 'p'
 
             client.send_command(envio)
+
         except:
             funcionando=False
             messagebox.showerror(title="Error", message="Conexão encerrada!")
@@ -74,6 +86,9 @@ def run_game():
         yellow_sprites.draw(screen)
         blue_sprites.draw(screen)
         pygame.display.flip()
+
+        print(format(t_ciclo, ".5f"), end=" ")
+        print(format(t_parte, ".5f"), end=" ")
 
     pygame.quit()
 
@@ -119,7 +134,7 @@ def get_package():
     frame.ball.x = float(data[72:76])
     frame.ball.y = float(data[76:80])
 
-    print(frame.robots_blue[0].x, frame.robots_blue[0].y)
+    print(frame.robots_blue[0].x, frame.robots_blue[0].y, frame.robots_blue[0].orientation)
 
     return frame
     
