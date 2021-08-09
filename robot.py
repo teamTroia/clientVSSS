@@ -39,7 +39,9 @@ class Robot(pygame.sprite.Sprite):
     def rotate(self, angle):
         angle=degrees(angle)
 
-        if angle%90 > 81 or angle%90 <= 9:
+        rotacoes = angle // 90 - 1
+
+        if angle%90 <= 9:
             self.image=self.sprites[0]
         elif 9 < angle%90 <= 27:
             self.image = self.sprites[1]
@@ -49,7 +51,8 @@ class Robot(pygame.sprite.Sprite):
             self.image = self.sprites[3]
         elif 63 < angle%90 <= 81:
             self.image = self.sprites[4]
+        if angle % 90 > 81:
+            self.image = self.sprites[0]
+            rotacoes+=1
 
-        rotacoes=angle//90
-
-        self.image=pygame.transform.rotate(self.image, -90*rotacoes)
+        self.image=pygame.transform.rotate(self.image, 90*rotacoes)

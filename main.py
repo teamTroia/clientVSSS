@@ -6,9 +6,8 @@ from tkinter import messagebox
 from frame import *
 from pygame.locals import *
 import lib.common_pb2 as comm
-import time
   
-def run_game():
+def run_game(team_id):
     pygame.init()
     screen = pygame.display.set_mode((520,680))
     pygame.display.set_caption("VSSS")
@@ -16,16 +15,13 @@ def run_game():
     clock = pygame.time.Clock()
 
     teclas=[]
-
-    t_ini=time.time()
-
     funcionando=True
+    imgCampo=pygame.image.load("sprites/campo.png")
+
     while funcionando:
         clock.tick(60)
         screen.fill((0,0,0))
-
-        t_ciclo=time.time()-t_ini
-        t_ini=time.time()
+        #screen.blit(imgCampo, (0,0))
 
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
@@ -35,22 +31,35 @@ def run_game():
 
             elif event.type == pygame.KEYDOWN:
                 key=check_key(event.key)
-
                 if key not in teclas and key!='p':
                     teclas.append(key)
+
+
             elif event.type == pygame.KEYUP:
                 key=check_key(event.key)
-
                 if key in teclas:
                     teclas.remove(key)
 
         try:
-            t1 = time.time()
             frame = get_package()
-            t_parte = time.time() - t1
+
+            if not team_id:
+                for i in range(3):
+                    frame.robots_blue[i].x = 1.7 - frame.robots_blue[i].x
+                    frame.robots_blue[i].y = 1.3 - frame.robots_blue[i].y
+                    frame.robots_blue[i].orientation = frame.robots_blue[i].orientation + 3.14
+
+                    frame.robots_yellow[i].x = 1.7 - frame.robots_yellow[i].x
+                    frame.robots_yellow[i].y = 1.3 - frame.robots_yellow[i].y
+                    frame.robots_yellow[i].orientation = frame.robots_yellow[i].orientation + 3.14
+
+                    frame.ball.x = 1.7 - frame.ball.x
+                    frame.ball.y = 1.3 - frame.ball.y
 
             index = 0
             for robot in blue_sprites:
+                if index==2:
+                    print(frame.robots_blue[index].orientation)
                 robot.locate(frame.robots_blue[index].x,frame.robots_blue[index].y,frame.robots_blue[index].orientation)
                 index += 1
 
@@ -58,6 +67,8 @@ def run_game():
             for robot in yellow_sprites:
                 robot.locate(frame.robots_yellow[index2].x,frame.robots_yellow[index2].y,frame.robots_yellow[index2].orientation)
                 index2 += 1
+
+            pygame.draw.circle(screen, (255, 99, 71), (frame.ball.y*400, frame.ball.x*400),8)
 
             if len(teclas) == 1:
                 envio = teclas[0]
@@ -86,9 +97,6 @@ def run_game():
         yellow_sprites.draw(screen)
         blue_sprites.draw(screen)
         pygame.display.flip()
-
-        print(format(t_ciclo, ".5f"), end=" ")
-        print(format(t_parte, ".5f"), end=" ")
 
     pygame.quit()
 
@@ -134,8 +142,6 @@ def get_package():
     frame.ball.x = float(data[72:76])
     frame.ball.y = float(data[76:80])
 
-    print(frame.robots_blue[0].x, frame.robots_blue[0].y, frame.robots_blue[0].orientation)
-
     return frame
     
 def start_com(addr, team, robot):
@@ -156,7 +162,7 @@ def start_com(addr, team, robot):
         messagebox.showerror(title="Error", message="Robô ocupado!")
     else:
         menu.hide()
-        run_game()
+        run_game(team_id)
         menu.show()
         
 
