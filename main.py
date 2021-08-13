@@ -16,12 +16,15 @@ def run_game(team_id):
 
     teclas=[]
     funcionando=True
-    imgCampo=pygame.image.load("sprites/campo.png")
+    imgCampo=pygame.image.load("sprites/campo.png").convert_alpha()
+
+    if team_id:
+        imgCampo = pygame.transform.flip(imgCampo, False, True)
 
     while funcionando:
         clock.tick(60)
         screen.fill((0,0,0))
-        #screen.blit(imgCampo, (0,0))
+        screen.blit(imgCampo, (0,0))
 
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
@@ -98,6 +101,7 @@ def run_game(team_id):
         blue_sprites.draw(screen)
         pygame.display.flip()
 
+    client.close()
     pygame.quit()
 
 def check_key(key):

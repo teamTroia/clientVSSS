@@ -20,3 +20,6 @@ class CommandSender:
     def receive_command(self, buffer_size):
         command = self._sock.recv(buffer_size)
         return command
+
+    def close(self):
+        self._sock.close()
