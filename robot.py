@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-import lib.common_pb2 as comm
 from math import *
 
 class Robot(pygame.sprite.Sprite):

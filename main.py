@@ -5,8 +5,7 @@ import pygame
 from tkinter import messagebox
 from frame import *
 from pygame.locals import *
-import lib.common_pb2 as comm
-  
+
 def run_game(team_id):
     pygame.init()
     screen = pygame.display.set_mode((520,680))
