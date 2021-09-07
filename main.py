@@ -61,8 +61,6 @@ def run_game(team_id):
 
             index = 0
             for robot in blue_sprites:
-                if index==2:
-                    print(frame.robots_blue[index].orientation)
                 robot.locate(frame.robots_blue[index].x,frame.robots_blue[index].y,frame.robots_blue[index].orientation)
                 index += 1
 
